@@ -32,12 +32,11 @@ CFLAGS = -O2 -Wall
 
 all : xlsx2txt.exe
 
-main.c : xlsx2txt.lua srlua.lua
-	lua srlua.lua $< > $@
+scripts.c : embed.lua _manifest.lua xlsx2txt.lua
+	lua embed.lua
 
-xlsx2txt.exe : main.c luaclib/luazip.c $(ZLIB_SRC) $(MINIZIP_SRC)
+xlsx2txt.exe : main.c scripts.c luaclib/luazip.c $(ZLIB_SRC) $(MINIZIP_SRC)
 	gcc $(CFLAGS) -o $@ $^ -I$(ZLIB_DIR) -I$(MINIZIP_DIR) -I/usr/local/include -L/usr/local/lib -llua
 
 clean :
-	rm main.c xlsx2txt.exe
-
+	rm scripts.c xlsx2txt.exe
